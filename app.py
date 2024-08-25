@@ -7,7 +7,7 @@ app = Flask(__name__) #initialising flask
 @app.route("/") #defining the routes for the home() funtion (Multiple routes can be used as seen here)
 @app.route("/home")
 def home():
-    return render_template("home.html") #rendering our home.html contained within /templates
+    return render_template("index.html") #rendering our home.html contained within /templates
 
 @app.route("/account", methods=["POST", "GET"]) #defining the routes for the account() funtion
 def account():
