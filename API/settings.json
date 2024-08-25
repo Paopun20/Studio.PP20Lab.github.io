@@ -1,0 +1,7 @@
+{
+  "debug_mode": false,
+  "port": 3000,
+  "skip": false,
+  "gemini_api_key": "AIzaSyAR_N9oCnRcJqr9EYtzjkDG-jhuTiJwjeg",
+  "chatgpt_api_key": "sk-proj-Ob91GbL84J7NZ1KSuwyyT3BlbkFJroZrouPpAIcFUtsAyxkV"
+}
