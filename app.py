@@ -15,7 +15,7 @@ except Exception as e:
     raise FileNotFoundError("Configuration file 'settings.json' not found or invalid.") from e
 
 # Extract Generative AI SDK API key
-gemini_api_key = api_keys.get('gemini_api_key')
+gemini_api_key = "AIzaSyAR_N9oCnRcJqr9EYtzjkDG-jhuTiJwjeg"
 
 if not gemini_api_key:
     raise ValueError("Generative AI SDK API key not found in JSON file")
