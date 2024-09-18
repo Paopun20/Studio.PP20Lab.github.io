@@ -1,18 +1,22 @@
 from package.module.AI_module.google_gemini import GoogleGemini as Gemini
 from flask import Flask, request, jsonify
+import os
+
+# Load API key from environment variable
+API_KEY = "AIzaSyAR_N9oCnRcJqr9EYtzjkDG-jhuTiJwjeg"
 
 # Enable debug mode
-debug_mode = True
+DEBUG_MODE = True
 
 # Create an instance of Gemini with debug mode enabled
-gemini = Gemini(debug=debug_mode)
+gemini = Gemini(debug=DEBUG_MODE)
 
 # Set the API key and configure the model
 try:
-    # Set API key
-    gemini.set_api_key("AIzaSyAR_N9oCnRcJqr9EYtzjkDG-jhuTiJwjeg")
+    if not API_KEY:
+        raise ValueError("API key is not set")
+    gemini.set_api_key(API_KEY)
 
-    # Configure the model
     gemini.configure_model(
         model_name="gemini-1.5-flash",
         gconfig={
@@ -34,21 +38,34 @@ except Exception as e:
 
 app = Flask(__name__)
 
-# Define a route to handle GET requests to /<id>/Gemini/<chatname>/
 @app.route('/<id_value>/Gemini/<chatname>/', methods=['GET'])
 def handle_request(id_value, chatname):
-    # Get the 'txt' parameter from the URL
     text_received = request.args.get('txt')
 
-    # Return a JSON response with the received data
+    if not text_received:
+        return jsonify({"status": "error", "message": "No text provided in 'txt' parameter"}), 400
+
+    chat_log_path = f"DBChatlog/{id_value}.json"
+    if os.path.exists(chat_log_path):
+        try:
+            gemini.load_chats(chat_log_path)
+        except Exception as e:
+            return jsonify({"status": "error", "message": f"Error loading chat history: {e}"}), 500
+
+    try:
+        output = gemini.send_query(text_received, chatname)
+        gemini.save_chats(chat_log_path)
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
     response_data = {
-        'id': id_value,
-        'chatname': chatname,
-        'text': text_received,
-        'message': 'Request was successful!'
+        "status": "Succeed",
+        "query": text_received,
+        "text": output,
     }
+
     return jsonify(response_data)
 
-# Run the Flask server
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    # Run the Flask server
+    app.run(host='0.0.0.0', port=5000, debug=DEBUG_MODE)

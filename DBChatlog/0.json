@@ -1,0 +1,16 @@
+{
+    "hello": [
+        {
+            "user": "hi",
+            "response": "Hi! How can I help you today? \n"
+        },
+        {
+            "user": "hi",
+            "response": "Hi there! How can I help you today? \n"
+        },
+        {
+            "user": "hi",
+            "response": "Hi there! How can I help you today? \n"
+        }
+    ]
+}

@@ -21,21 +21,20 @@ class GoogleGemini:
         if self.debug:
             print("[DEBUG] GoogleGemini initialized.")
 
-        # Configure API key and model if provided
         if api_key:
             self.set_api_key(api_key)
-        if api_key and model_name:
+        if model_name:
             self.configure_model(model_name, gconfig, safety)
 
     def set_api_key(self, api_key):
         """Sets the API key for Google Generative AI API."""
         try:
             if self.debug:
-                print(f"[DEBUG] Setting API key: {api_key}")
+                print(f"[DEBUG] Setting API key.")
             genai.configure(api_key=api_key)
             print("API key successfully set.")
         except Exception as e:
-            raise ValueError(f"Failed to set API key: {e}")
+            raise ValueError("Failed to set API key.") from e
 
     def configure_model(self, model_name="gemini-1.5-flash", gconfig=None, safety=None):
         """
@@ -56,7 +55,7 @@ class GoogleGemini:
             )
             print(f"Model '{model_name}' configured successfully.")
         except Exception as e:
-            raise ValueError(f"Error configuring model: {e}")
+            raise ValueError("Error configuring model.") from e
 
     def send_query(self, query, chat_name="default_chat"):
         """
@@ -82,12 +81,10 @@ class GoogleGemini:
             if self.debug:
                 print(f"[DEBUG] Response received: {response}")
 
-            # Store chat in history
             self._store_chat(chat_name, query, response)
-
             return response
         except Exception as e:
-            raise RuntimeError(f"Error querying the model: {e}")
+            raise RuntimeError("Error querying the model.") from e
 
     def _store_chat(self, chat_name, user_query, model_response):
         """Private method to store a chat conversation."""
@@ -130,8 +127,8 @@ class GoogleGemini:
             with open(file_path, 'w') as file:
                 json.dump(self.chats, file, indent=4)
             print(f"Chat history saved to {file_path}")
-        except Exception as e:
-            raise IOError(f"Failed to save chat history: {e}")
+        except IOError as e:
+            raise IOError("Failed to save chat history.") from e
 
     def load_chats(self, file_path="chat_history.json"):
         """
@@ -148,7 +145,7 @@ class GoogleGemini:
                 with open(file_path, 'r') as file:
                     self.chats = json.load(file)
                 print(f"Chat history loaded from {file_path}")
-            except Exception as e:
-                raise IOError(f"Failed to load chat history: {e}")
+            except IOError as e:
+                raise IOError("Failed to load chat history.") from e
         else:
             raise FileNotFoundError(f"No such file: {file_path}")
